@@ -43,11 +43,15 @@ jobs:
         # Install npm dependencies, cache them correctly
         # and run all Cypress tests
 
+        - name: Restore cache
+          uses: actions/cache@v2
+          with:
+            path: ~/.npm
+            key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
         
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
             install: false
-            cache-key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
             build: npm run build
             start: npm start
