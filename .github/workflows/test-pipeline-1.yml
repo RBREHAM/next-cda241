@@ -39,7 +39,9 @@ jobs:
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
-            run: npm run e2e:headless
+            install: false
+            build: npm run build
+            start: npm start
 
         - name: Download Cypress videos 
           if: always()
