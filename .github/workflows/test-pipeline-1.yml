@@ -22,6 +22,9 @@ jobs:
         - run: npm run build
 
     test:
+        strategy:
+            matrix:
+                browser: [chrome, edge]
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -39,6 +42,7 @@ jobs:
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
+            browser: ${{ matrix.browser }}
             build: npm run build
             start: npm start
             install: false
@@ -58,3 +62,5 @@ jobs:
             name: cypress-screenshots
             path: cypress/screenshots
             retention-days: 5
+
+    
