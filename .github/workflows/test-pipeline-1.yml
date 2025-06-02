@@ -34,14 +34,28 @@ jobs:
         - name: Build with Next.js
           run: npm run build
 
-    tests:
+    test:
         needs: build
         runs-on: ubuntu-24.04
         steps:
         - name: Checkout
           uses: actions/checkout@v4
-        # Install npm dependencies, cache them correctly
-        # and run all Cypress tests
+
+        - name: Download Cypress videos 
+          if: always()
+          uses: actions/upload-artifacts-@v4
+          with: 
+            name: cypress-videos
+            path: cypress/videos
+            retention-days: 5
+
+        - name: Download Cypress screenshots 
+          if: failure()
+          uses: actions/upload-artifacts-@v4
+          with: 
+            name: cypress-screenshots
+            path: cypress/screenshots
+            retention-days: 5
 
         - name: Restore cache
           uses: actions/cache@v4
@@ -52,6 +66,7 @@ jobs:
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
-            install: false
+            # install: false
+            cache-key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
             build: npm run build
             start: npm start
