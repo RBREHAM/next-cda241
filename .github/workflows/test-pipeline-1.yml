@@ -39,18 +39,18 @@ jobs:
           with:
             run: npm run e2e:headless
 
-        # - name: Download Cypress videos 
-        #   if: always()
-        #   uses: actions/upload-artifacts-@v4
-        #   with: 
-        #     name: cypress-videos
-        #     path: cypress/videos
-        #     retention-days: 5
+        - name: Download Cypress videos 
+          if: always()
+          uses: actions/upload-artifact@v4
+          with: 
+            name: cypress-videos
+            path: cypress/videos
+            retention-days: 5
 
-        # - name: Download Cypress screenshots 
-        #   if: failure()
-        #   uses: actions/upload-artifacts-@v4
-        #   with: 
-        #     name: cypress-screenshots
-        #     path: cypress/screenshots
-        #     retention-days: 5
+        - name: Download Cypress screenshots 
+          if: failure()
+          uses: actions/upload-artifact@v4
+          with: 
+            name: cypress-screenshots
+            path: cypress/screenshots
+            retention-days: 5
