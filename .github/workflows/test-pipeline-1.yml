@@ -51,7 +51,7 @@ jobs:
           if: always()
           uses: actions/upload-artifact@v4
           with: 
-            name: cypress-videos
+            name: cypress-videos-${{ matrix.browser }}
             path: cypress/videos
             retention-days: 5
 
@@ -59,7 +59,7 @@ jobs:
           if: failure()
           uses: actions/upload-artifact@v4
           with: 
-            name: cypress-screenshots
+            name: cypress-screenshots-${{ matrix.browser }}
             path: cypress/screenshots
             retention-days: 5
 
