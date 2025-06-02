@@ -10,16 +10,16 @@ jobs:
         steps:
         - name: Checkout
           uses: actions/checkout@v4
-        - name: Install dependencies
-          run: npm install
-        - name: Build with Next.js
-          run: npm run build
         - name: Cache node modules
           id: cache-npm
           uses: actions/cache@v4
           with:
-            path: node_module # npm cache files are stored in `~/.npm` on Linux/macOS
+            path: |
+                node_module
+                /home/runner/.cache/Cypress
             key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+        - run: npm install
+        - run: npm run build
 
     test:
         needs: build
@@ -31,7 +31,9 @@ jobs:
         - name: Restore cache
           uses: actions/cache/restore@v4
           with:
-            path: node_module
+            path: |
+                node_module
+                /home/runner/.cache/Cypress
             key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
         
         - name: Cypress run
