@@ -79,7 +79,7 @@ jobs:
 
       - name: Remote SSH build
         run: |
-          ssh ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << 'EOF'
+          ssh -i aws.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com
             cd ~
             rm -rf next-cda241
             git clone https://github.com/${{ github.repository }}.git next-cda241
