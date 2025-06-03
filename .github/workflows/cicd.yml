@@ -79,7 +79,7 @@ jobs:
 
       - name: Remote SSH build
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << 'EOF'
             cd ~
             rm -rf next-cda241
             git clone https://github.com/${{ github.repository }}.git next-cda241
