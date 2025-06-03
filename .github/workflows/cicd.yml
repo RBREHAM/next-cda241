@@ -79,11 +79,12 @@ jobs:
 
       - name: Remote SSH build
         run: |
-          ssh -i aws.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com
-            cd ~
-            rm -rf next-cda241
-            git clone https://github.com/${{ github.repository }}.git next-cda241
-            cd next-cda241
-            npm install
-            npm run build
-          EOF
+            echo ${{ secrets.SSH_KEY }} > new_key.pem
+            ssh -i new_key.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
+                cd ~
+                rm -rf next-cda241
+                git clone https://github.com/${{ github.repository }}.git next-cda241
+                cd next-cda241
+                npm install
+                npm run build
+            EOF
