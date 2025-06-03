@@ -1,0 +1,89 @@
+name: Deployment pipeline
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - run: npm install
+      - run: npm run build
+
+  test:
+    strategy:
+      matrix:
+        browser: [chrome, edge]
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          browser: ${{ matrix.browser }}
+          build: npm run build
+          start: npm start
+          install: false
+
+      - name: Download Cypress videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos-${{ matrix.browser }}
+          path: cypress/videos
+          retention-days: 5
+
+      - name: Download Cypress screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots-${{ matrix.browser }}
+          path: cypress/screenshots
+          retention-days: 5
+
+  remote-build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    #   - name: Set up SSH key
+    #     run: |
+    #       mkdir -p ~/.ssh
+    #       echo "{{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+    #       chmod 600 ~/.ssh/id_rsa
+
+    #   - name: Add host to known_hosts
+    #     run: |
+    #       ssh-keyscan -H {{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Remote SSH build
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd ~
+            rm -rf next-cda241
+            git clone https://github.com/${{ github.repository }}.git next-cda241
+            cd next-cda241
+            npm install
+            npm run build
+          EOF
