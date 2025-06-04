@@ -1,6 +1,6 @@
 FROM debian:10 AS nodejs-my-website
 
-LABEL org.opencontainers.image.source=https://github.com/rbhream/next-cda241
+LABEL org.opencontainers.image.source=https://github.com/rbhream/next-cda241/next-app
 
 RUN apt-get update -yq \
 && apt-get install curl gnupg -yq \
