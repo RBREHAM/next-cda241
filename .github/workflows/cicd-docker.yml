@@ -43,7 +43,7 @@ jobs:
             ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd next-cda241
                 sudo docker-compose pull
-                sudo docker-compose -f docker-compose-yml up -d
+                sudo docker-compose -f docker-compose.yml up -d
             EOF
   
   build-deploy-prod:
@@ -66,5 +66,5 @@ jobs:
             ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd next-cda241
                 sudo docker-compose pull
-                sudo docker-compose -f docker-compose-prod-yml up -d
+                sudo docker-compose -f docker-compose.prod.yml up -d
             EOF
