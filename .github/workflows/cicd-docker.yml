@@ -1,8 +1,6 @@
-name: Docker Deployment pipeline main
+name: Docker Deployment pipeline
 
-on:
-  push:
-    branches: ['develop']
+on: [push]
 
 jobs:
   build-docker:
@@ -25,8 +23,10 @@ jobs:
         run: |
           docker push ghcr.io/rbreham/next-cda241/next-app:latest
 
-  build-deploy:
+  build-deploy-dev:
     runs-on: ubuntu-latest
+    if: 
+      github.ref == 'refs/heads/develop'
     needs: build-docker
     steps:
       - name: Remote SSH deploy
@@ -34,5 +34,19 @@ jobs:
             ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd next-cda241
                 sudo docker-compose pull
-                sudo docker-compose -f docker-compose-produ-yml up -d
+                sudo docker-compose -f docker-compose-yml up -d
+            EOF
+  
+  build-deploy-prod:
+    runs-on: ubuntu-latest
+    if: 
+      github.ref == 'refs/heads/master'
+    needs: build-docker
+    steps:
+      - name: Remote SSH deploy
+        run: |
+            ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
+                cd next-cda241
+                sudo docker-compose pull
+                sudo docker-compose -f docker-compose-prod-yml up -d
             EOF
