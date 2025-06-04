@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  next-app:
+    image: ghcr.io/rbreham/next-cda241/next-app:latest
+    container_name: next-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    # Uncomment if you use .env.production files
+    # env_file:
+    #   - .env.production
