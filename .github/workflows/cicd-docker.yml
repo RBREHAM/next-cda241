@@ -45,7 +45,6 @@ jobs:
                 sudo docker-compose pull
                 sudo docker-compose -f docker-compose.yml up -d
             EOF
-  
             
   build-deploy-prod:
     runs-on: ubuntu-latest
