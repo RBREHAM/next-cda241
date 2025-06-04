@@ -17,8 +17,8 @@ jobs:
 
       - name: Build Docker image (linux/amd64)
         run: |
-          docker build --platform linux/amd64 -t ghcr.io/${{ github.repository}}/next-app:latest .
+          docker build --platform linux/amd64 -t ghcr.io/rbreham/next-cda241/next-app:latest .
 
       - name: Push Docker image to GHCR
         run: |
-          docker push ghcr.io/${{ github.repository}}/next-app:latest
+          docker push ghcr.io/rbreham/next-cda241/next-app:latest
