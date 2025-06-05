@@ -26,6 +26,8 @@ jobs:
           
   build-deploy-dev:
     runs-on: ubuntu-latest
+    environment:
+      name: test
     if: 
       github.ref_name == 'develop'
     needs: build-docker
@@ -42,30 +44,32 @@ jobs:
       - name: Remote SSH deploy
         run: |
             ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
-                cd next-cda241
+                cd dev
                 sudo docker-compose pull
                 sudo docker-compose -f docker-compose.yml up -d
             EOF
-  
+            
   build-deploy-prod:
     runs-on: ubuntu-latest
     if: 
       github.ref_name == 'master'
     needs: build-docker
+    environment:
+      name: prod
     steps:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
-
+ 
       - name: Add host to known_hosts
         run: |
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Remote SSH deploy
         run: |
             ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
-                cd next-cda241
-                sudo docker-compose pull
+                cd prod
+                sudo docker-compose -f docker-compose.prod.yml pull
                 sudo docker-compose -f docker-compose.prod.yml up -d
             EOF
