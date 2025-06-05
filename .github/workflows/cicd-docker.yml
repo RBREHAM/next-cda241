@@ -62,6 +62,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
+          cat ~/.ssh/known_hosts
  
       - name: Add host to known_hosts
         run: |
