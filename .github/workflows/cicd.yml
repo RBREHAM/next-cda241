@@ -4,6 +4,8 @@ on: [push]
 
 jobs:
   build:
+    if: 
+      github.ref_name == 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
