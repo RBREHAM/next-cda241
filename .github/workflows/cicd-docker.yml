@@ -66,15 +66,14 @@ jobs:
           touch ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
- 
-      - name: Add host to known_hosts
-        run: |
-          ssh-keyscan -T 300 -H ec2-13-216-58-120.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+
+      # - name: Add host to known_hosts
+      #   run: |
+      #     ssh-keyscan -T 300 -H ec2-13-216-58-120.compute-1.amazonaws.com >> ~/.ssh/known_hosts
       - name: Remote SSH deploy
         run: |
-            ssh -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
+            ssh -i ~/.ssh/id_rsa_prod.pem -o StrictHostKeyChecking=no ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd prod
-                git pull
                 sudo docker-compose -f docker-compose.prod.yml pull
                 sudo docker-compose -f docker-compose.prod.yml up -d
             EOF
