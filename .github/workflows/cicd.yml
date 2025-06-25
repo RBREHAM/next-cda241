@@ -70,8 +70,8 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key.pem
-          chmod 600 ~/.ssh/key.pem
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key2.pem
+          chmod 600 ~/.ssh/key2.pem
 
       - name: Add host to known_hosts
         run: |
@@ -79,10 +79,9 @@ jobs:
 
       - name: Remote SSH build
         run: |
-            ssh -i ~/.ssh/key.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
-                mkdir ./dev
+            ssh -i ~/.ssh/key2.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd dev
-                git clone https://github.com/RBREHAM/next-cda241.git ./
+                git pull
                 npm install
                 npm run build
             EOF
