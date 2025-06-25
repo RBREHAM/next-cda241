@@ -79,7 +79,7 @@ jobs:
 
       - name: Remote SSH build
         run: |
-            ssh cesi-cda24 << EOF
+            ssh -i ~/.ssh/key.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd dev
                 git pull
                 npm install --no-optional --verbose
