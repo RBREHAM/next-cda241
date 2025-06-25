@@ -34,16 +34,17 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa.pem
-          chmod 600 ~/.ssh/id_rsa.pem
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa_dev.pem
+          chmod 600 ~/.ssh/id_rsa_dev.pem
 
       - name: Add host to known_hosts
         run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -T 240 -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Remote SSH deploy
         run: |
-            ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
+            ssh -i ~/.ssh/id_rsa_dev.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd dev
+                git pull
                 sudo docker-compose pull
                 sudo docker-compose -f docker-compose.yml up -d
             EOF
@@ -59,15 +60,18 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa.pem
-          chmod 600 ~/.ssh/id_rsa.pem
- 
-      - name: Add host to known_hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa_prod.pem
+          chmod 600 ~/.ssh/id_rsa_prod.pem
+          touch ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          cat ~/.ssh/known_hosts
+
+      # - name: Add host to known_hosts
+      #   run: |
+      #     ssh-keyscan -T 300 -H ec2-13-216-58-120.compute-1.amazonaws.com >> ~/.ssh/known_hosts
       - name: Remote SSH deploy
         run: |
-            ssh -i ~/.ssh/id_rsa.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
+            ssh -i ~/.ssh/id_rsa_prod.pem -T 300 -o StrictHostKeyChecking=no ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd prod
                 sudo docker-compose -f docker-compose.prod.yml pull
                 sudo docker-compose -f docker-compose.prod.yml up -d
