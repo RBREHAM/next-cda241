@@ -74,6 +74,7 @@ jobs:
             ssh -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd prod
                 git pull
+                echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
                 sudo docker pull ghcr.io/rbreham/next-cda241/next-app:latest
                 sudo docker-compose -f docker-compose.prod.yml up -d
             EOF
