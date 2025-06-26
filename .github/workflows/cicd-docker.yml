@@ -70,14 +70,15 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Remote SSH deploy
-        run: |
-            ssh -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << 'EOF'
-                echo "${GHCR_PAT}" | docker login ghcr.io -u rbreham --password-stdin
-                cd prod
-                git pull
-                sudo docker pull ghcr.io/rbreham/next-cda241/next-app:latest
-                sudo docker-compose -f docker-compose.prod.yml up -d
-            EOF
         env:
           GHCR_PAT: ${{ secrets.GHCR_PAT_PROD }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com <<EOF
+            export GHCR_PAT="${GHCR_PAT}"
+            echo "\$GHCR_PAT" | docker login ghcr.io -u RBREHAM --password-stdin
+            cd prod
+            git pull
+            sudo docker pull ghcr.io/rbreham/next-cda241/next-app:latest
+            sudo docker-compose -f docker-compose.prod.yml up -d --force-recreate
+          EOF
 
