@@ -44,7 +44,7 @@ jobs:
         run: |
             ssh -i ~/.ssh/id_rsa_dev.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd dev
-                git pull
+                git pull origin develop
                 sudo docker-compose -f docker-compose.yml pull
                 sudo docker-compose -f docker-compose.yml up -d
             EOF
@@ -76,7 +76,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com <<EOF
             echo "${GHCR_PAT}" | sudo docker login ghcr.io -u RBREHAM --password-stdin
             cd prod
-            git pull
+            git pull origin master
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml up -d --force-recreate
           EOF
