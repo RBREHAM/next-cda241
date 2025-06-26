@@ -44,7 +44,7 @@ jobs:
         run: |
             ssh -i ~/.ssh/id_rsa_dev.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd dev
-                git pull
+                git pull origin develop
                 sudo docker-compose -f docker-compose.yml pull
                 sudo docker-compose -f docker-compose.yml up -d
             EOF
@@ -73,6 +73,7 @@ jobs:
         run: |
             ssh -i ~/.ssh/id_rsa_prod.pem -T 300 -o StrictHostKeyChecking=no ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd prod
+                git pull origin master
                 sudo docker-compose -f docker-compose.prod.yml pull
                 sudo docker-compose -f docker-compose.prod.yml up -d
             EOF
