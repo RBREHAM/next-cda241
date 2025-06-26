@@ -71,10 +71,13 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Remote SSH deploy
         run: |
-            ssh -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
+            ssh -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << 'EOF'
+                echo "${GHCR_PAT}" | docker login ghcr.io -u rbreham --password-stdin
                 cd prod
                 git pull
-                echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
                 sudo docker pull ghcr.io/rbreham/next-cda241/next-app:latest
                 sudo docker-compose -f docker-compose.prod.yml up -d
             EOF
+        env:
+          GHCR_PAT: ${{ secrets.GHCR_PAT_PROD }}
+
