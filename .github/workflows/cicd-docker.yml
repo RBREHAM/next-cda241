@@ -74,8 +74,7 @@ jobs:
           GHCR_PAT: ${{ secrets.GHCR_PAT_PROD }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_prod.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com <<EOF
-            export GHCR_PAT="${GHCR_PAT}"
-            echo "\$GHCR_PAT" | docker login ghcr.io -u rbreham --password-stdin
+            echo "${GHCR_PAT}" | sudo docker login ghcr.io -u RBREHAM --password-stdin
             cd prod
             git pull
             sudo docker pull ghcr.io/rbreham/next-cda241/next-app:latest
