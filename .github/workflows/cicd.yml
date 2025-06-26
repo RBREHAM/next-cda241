@@ -80,8 +80,9 @@ jobs:
       - name: Remote SSH build
         run: |
             ssh -i ~/.ssh/key.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
-                cd dev
-                git pull
+                mkdir prod
+                cd prod
+                git clone https://github.com/RBREHAM/next-cda241.git ./
                 npm install --no-optional --verbose
                 npm run build
             EOF
