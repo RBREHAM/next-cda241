@@ -9,7 +9,7 @@ export default function AboutComponent() {
     <>
       <h1>About Page</h1>
       <p className={styles.description}>
-        <Link href="/">&larr; Go Back</Link>
+        <Link href="/">&larr; Go Back dude</Link>
       </p>
     </>
   );
