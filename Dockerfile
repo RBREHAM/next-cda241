@@ -16,6 +16,8 @@ RUN npm install --no-optional --verbose
 
 COPY . .
 
+RUN node -e "require('next')"
+
 RUN npm run build
 
 EXPOSE 3000
