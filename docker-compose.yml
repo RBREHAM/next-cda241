@@ -10,4 +10,5 @@ services:
       - "8080:3000"
     volumes:
       - .:/app
+    restart: always
     command: ['npm', 'run', 'dev']
