@@ -44,7 +44,7 @@ jobs:
         run: |
             ssh -i ~/.ssh/id_rsa_dev.pem ubuntu@ec2-13-216-58-120.compute-1.amazonaws.com << EOF
                 cd dev
-                git reset --hard origin/develop
+                git pull origin develop
                 sudo docker-compose -f docker-compose.yml build
                 sudo docker-compose -f docker-compose.yml up -d --force-recreate
             EOF

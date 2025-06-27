@@ -8,17 +8,16 @@ RUN apt-get update -yq \
 && apt-get install nodejs -yq \
 && apt-get clean -y
 
-ADD . /app
-
 WORKDIR /app
 
+COPY package.json package-lock.json ./
+
 RUN npm install --no-optional --verbose
+
+COPY . .
+
 RUN npm run build
 
 EXPOSE 3000
 
-COPY docker/next/entrypoint.sh /usr/local/bin/entrypoint
-RUN chmod +x /usr/local/bin/entrypoint
-
-ENTRYPOINT ["entrypoint"]
 CMD ["npm", "run", "start"]
